@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNet Account Type</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap');
+
+        :root {
+            --dark-green: #18352A;
+            --muted-green: #acc9b1;
+            --light-green: #a3db95;
+            --accent-green: #40c02b;
+            --cream: #F1E8D2;
+        }
+
+        body {
+            background-color: var(--dark-green);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            color: var(--dark-green);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+  
+        @keyframes flyInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fly-in {
+            opacity: 0; 
+            animation: flyInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.5s; }
+        .delay-4 { animation-delay: 0.7s; }
+
+        .main-title {
+            font-family: 'Quicksand', sans-serif;
+            color: #ffffff;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            margin: 0;
+        }
+
+        .subtitle {
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 10px;
+            text-align: center;
+            opacity: 0.8;
+            letter-spacing: -0.01em;
+        }
+
+        /* Account Type Container */
+        .selection-card {
+            background-color: var(--muted-green);
+            border-radius: 24px;
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            padding: 14px;
+            border-radius: 16px;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            user-select: none;
+            background-color: rgba(255, 255, 255, 0);
+        }
+
+        .option-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .option-item:active {
+            transform: scale(0.96);
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .circle-select {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-green);
+            background-color: transparent;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        input[type="radio"]:checked + .circle-select {
+            background-color: var(--accent-green);
+            transform: scale(1.1);
+        }
+
+        input[type="radio"]:checked + .circle-select::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        #termsCheckbox:checked + .circle-select {
+            background-color: var(--accent-green);
+        }
+
+        #termsCheckbox:checked + .circle-select::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .option-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--dark-green);
+            letter-spacing: -0.02em;
+        }
+
+        .terms-card {
+            background-color: var(--muted-green);
+            border-radius: 16px;
+            padding: 14px;
+            width: 100%;
+            max-width: 350px;
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s;
+        }
+        
+        .terms-card:active {
+            transform: scale(0.98);
+        }
+
+        .terms-text {
+            font-size: 0.7rem;
+            line-height: 1.4;
+            color: var(--dark-green);
+            font-weight: 500;
+        }
+
+        .continue-btn {
+            background-color: var(--light-green);
+            color: var(--dark-green);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 16px;
+            width: 100%;
+            max-width: 240px;
+            border-radius: 30px;
+            margin-top: 40px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.2);
+        }
+
+        .continue-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.3);
+        }
+
+        .continue-btn:active:not(:disabled) {
+            transform: translateY(0) scale(0.97);
+        }
+
+        .continue-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-6">
+
+    <div class="mt-10 mb-12 w-full flex flex-col items-center animate-fly-in">
+        <p class="text-white font-bold text-xl mb-6 tracking-tight">Welcome to</p>
+        
+        <div class="flex flex-col items-center">
+
+            <img src="D:\Intro_Comp_Project\HTML\Agrinet_Logo.png" alt="AgriNet Logo" 
+                 class="w-16 h-16 mb-4 object-contain"
+                 onerror="this.style.display='none'; document.getElementById('svg-icon').classList.remove('hidden');">
+            
+            <div id="svg-icon" class="hidden mb-4">
+                <svg width="64" height="64" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="#a3db95" fill-opacity="0.2"/>
+                    <path d="M50 20C50 20 20 40 20 70C20 85 35 90 50 90C65 90 80 85 80 70C80 40 50 20 50 20Z" fill="#a3db95"/>
+                    <path d="M50 30V90" stroke="#18352A" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <h1 class="main-title">AgriNet</h1>
+            <p class="subtitle">Connecting Farmers, Markets, and Transport</p>
+        </div>
+    </div>
+
+    <div class="selection-card text-left animate-fly-in delay-1">
+        <h3 class="text-lg font-bold mb-5 ml-2 tracking-tight">Choose Account Type:</h3>
+        
+        <label class="option-item">
+            <input type="radio" name="account" value="farmer" class="hidden" checked>
+            <div class="circle-select"></div>
+            <span class="option-text">Farmer / Producer</span>
+        </label>
+
+        <label class="option-item">
+            <input type="radio" name="account" value="buyer" class="hidden">
+            <div class="circle-select"></div>
+            <span class="option-text">Buyer / Market</span>
+        </label>
+
+        <label class="option-item">
+            <input type="radio" name="account" value="transporter" class="hidden">
+            <div class="circle-select"></div>
+            <span class="option-text">Transporter</span>
+        </label>
+    </div>
+
+    <label class="terms-card text-left animate-fly-in delay-2">
+        <input type="checkbox" id="termsCheckbox" class="hidden" checked>
+        <div class="circle-select w-5 h-5 mt-0.5"></div>
+        <p class="terms-text">
+            By continuing, you agree to AgriNet's Terms, and Privacy Policy. You consent to sharing your basic information and location for delivery and market coordination.
+        </p>
+    </label>
+
+    <button class="continue-btn animate-fly-in delay-3" id="continueBtn">
+        Continue
+    </button>
+
+    <script>
+        const continueBtn = document.getElementById('continueBtn');
+        const termsCheckbox = document.getElementById('termsCheckbox');
+
+        termsCheckbox.addEventListener('change', () => {
+            continueBtn.disabled = !termsCheckbox.checked;
+        });
+
+        continueBtn.addEventListener('click', () => {
+            if (!termsCheckbox.checked) return;
+
+            const selectedAccount = document.querySelector('input[name="account"]:checked').value;
+            
+            localStorage.setItem('selectedAccountType', selectedAccount);
+
+            const routes = {
+                'farmer': 'farmer_signup.html',
+                'buyer': 'buyer_signup.html',
+                'transporter': 'transporter_signup.html'
+            };
+
+            continueBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                window.location.href = routes[selectedAccount];
+            }, 100);
+        });
+    </script>
+
+</body>
+</html>

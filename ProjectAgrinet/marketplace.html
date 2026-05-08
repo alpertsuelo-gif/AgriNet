@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNet - Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Quicksand:wght@700&display=swap');
+
+        :root {
+            --bg-dark: #18352A;
+            --accent-light: #9cd695;
+            --accent-vibrant: #40c02b;
+            --text-on-dark: #ffffff;
+            --glass: rgba(156, 214, 149, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-on-dark);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background-color: var(--accent-light);
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            color: var(--bg-dark);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .logo-text { font-family: 'Quicksand', sans-serif; font-size: 1.4rem; }
+
+        .marketplace-container { padding: 20px 16px; max-width: 600px; margin: 0 auto; }
+
+        .filter-section { margin-bottom: 24px; }
+
+        .filter-pill {
+            background-color: var(--accent-light);
+            color: var(--bg-dark);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 8px;
+            overflow: hidden;
+            max-width: 0;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            pointer-events: none;
+        }
+
+        .filter-options.show {
+            max-width: 500px;
+            opacity: 1;
+            pointer-events: auto;
+            margin-left: 12px;
+        }
+
+        .category-chip {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-light);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            border: 1px solid rgba(156, 214, 149, 0.1);
+            transform: translateX(-15px);
+            opacity: 0;
+        }
+
+        .filter-options.show .category-chip {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .filter-options.show .category-chip:nth-child(1) { transition-delay: 0.05s; }
+        .filter-options.show .category-chip:nth-child(2) { transition-delay: 0.1s; }
+        .filter-options.show .category-chip:nth-child(3) { transition-delay: 0.15s; }
+        .filter-options.show .category-chip:nth-child(4) { transition-delay: 0.2s; }
+
+        .category-chip.active {
+            background: var(--accent-light);
+            color: var(--bg-dark);
+        }
+
+
+        .marketplace-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .market-card { 
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease; 
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .market-card.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .market-card:active { transform: scale(0.96); }
+
+        .product-img {
+            width: 100%;
+            aspect-ratio: 0.85 / 1;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: var(--accent-light);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .price-tag {
+            position: absolute;
+            bottom: 8px; right: 8px;
+            background: rgba(24, 53, 42, 0.9);
+            backdrop-filter: blur(4px);
+            padding: 2px 8px; border-radius: 6px;
+            font-size: 0.7rem; font-weight: 700; color: var(--accent-light);
+        }
+
+        .market-avatar {
+            width: 24px; height: 24px;
+            background: var(--accent-light);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--accent-vibrant);
+        }
+
+        .market-name {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+            line-height: 1.1;
+        }
+
+        .market-location {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.8;
+            color: var(--accent-light);
+        }
+
+        /* Notifications */
+        #notificationSidebar {
+            position: fixed; top: 0; right: -100%;
+            width: 300px; height: 100%;
+            background: var(--bg-dark);
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 1px solid var(--glass);
+            padding: 20px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        #notificationSidebar.open { right: 0; }
+
+        .overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5); visibility: hidden; opacity: 0;
+            transition: all 0.3s; z-index: 900;
+        }
+        .overlay.active { visibility: visible; opacity: 1; }
+
+        .shimmer {
+            background: linear-gradient(90deg, #24463a 25%, #2a5244 50%, #24463a 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        .toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--accent-light); color: var(--bg-dark);
+            padding: 10px 20px; border-radius: 30px; font-weight: 800; font-size: 0.8rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 2000;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay" onclick="toggleNotifications()"></div>
+    <div id="locationToast" class="toast">
+        <i data-lucide="map-pin" class="w-4 h-4"></i>
+        <span id="toastText">Found local farmers!</span>
+    </div>
+
+    <div id="notificationSidebar">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-white">Notifications</h2>
+            <i data-lucide="x" class="w-6 h-6 cursor-pointer" onclick="toggleNotifications()"></i>
+        </div>
+        <div id="notificationList" class="space-y-4"></div>
+    </div>
+
+    <header>
+        <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+            <img src="D:\Intro_Comp_Project\HTML\Agrinet_Logo2.png" alt="AgriNet Logo" 
+             alt="AgriNet Logo" class="w-14 h-14 mb-4 object-contain" />
+            <div class="logo-text">AgriNet</div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative cursor-pointer" onclick="toggleNotifications()">
+                     <i data-lucide="bell" class="w-6 h-6"></i>
+                     <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </div>
+                <i data-lucide="menu" class="w-8 h-8 cursor-pointer"></i>
+            </div>
+        </div>
+        <div class="flex justify-between items-center mt-4">
+            <div class="flex gap-6">
+                <i data-lucide="home" class="w-8 h-8 opacity-40"></i>
+                <i data-lucide="shopping-cart" class="w-8 h-8"></i>
+            </div>
+            <div class="flex gap-4">
+                <i data-lucide="users" class="w-8 h-8 opacity-40"></i>
+                <i data-lucide="message-circle" class="w-8 h-8 opacity-40"></i>
+                <i data-lucide="truck" class="w-8 h-8 opacity-40"></i>
+                <i data-lucide="search" class="w-8 h-8 opacity-40"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="marketplace-container">
+        <div class="filter-section">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="filter-pill" id="filterPill" onclick="toggleFilter()">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                        <span id="activeFilterLabel">Filter</span>
+                    </div>
+                    <div class="filter-options" id="filterOptions">
+                        <div class="category-chip active" onclick="applyFilter('All', event)">All</div>
+                        <div class="category-chip" onclick="applyFilter('Vegetables', event)">Veggie</div>
+                        <div class="category-chip" onclick="applyFilter('Fruits', event)">Fruits</div>
+                        <div class="category-chip" onclick="applyFilter('Organic', event)">Organic</div>
+                    </div>
+                </div>
+                <div class="text-right cursor-pointer" onclick="detectLocation()">
+                    <span class="text-[9px] uppercase font-bold opacity-40 tracking-widest block">Region</span>
+                    <span id="userLocationLabel" class="text-[11px] font-bold text-[#9cd695] uppercase">Detecting...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="marketplace-grid" id="marketGrid"></div>
+    </main>
+
+    <script>
+        const products = [
+            { id: 1, name: "Fresh Cabbage", farm: "Green Harvest Farm", location: "LIPA CITY", category: "Vegetables", price: "₱45/kg", img: "https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?q=80&w=400&h=400&auto=format&fit=crop" },
+            { id: 2, name: "Native Eggs", farm: "San Jose Poultry", location: "SANTA ROSA", category: "Poultry", price: "₱180/tray", img: "https://images.unsplash.com/photo-1582722872445-44c507c3c8f7?q=80&w=400&h=400&auto=format&fit=crop" },
+            { id: 3, name: "Organic Tomatoes", farm: "Maria's Farm", location: "ALANGILAN", category: "Organic", price: "₱65/kg", img: "https://images.unsplash.com/photo-1592841200221-a6898f307bac?q=80&w=400&h=400&auto=format&fit=crop" },
+            { id: 4, name: "Ripe Mangoes", farm: "Highland Greens", location: "TANAUAN", category: "Fruits", price: "₱150/kg", img: "https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=400&h=400&auto=format&fit=crop" },
+            { id: 5, name: "Red Onions", farm: "City Market Hub", location: "BATANGAS CITY", category: "Vegetables", price: "₱120/kg", img: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?q=80&w=400&h=400&auto=format&fit=crop" },
+            { id: 6, name: "Whole Chicken", farm: "Poultry World", location: "IBAAN", category: "Poultry", price: "₱210/pc", img: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=400&h=400&auto=format&fit=crop" },
+            { id: 7, name: "Fresh Produce", farm: "Makati Gardeners", location: "MAKATI CITY", category: "Organic", price: "₱80/kg", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=400&h=400&auto=format&fit=crop" }
+        ];
+
+        let currentUserLocation = "";
+
+        async function detectLocation() {
+            const label = document.getElementById('userLocationLabel');
+            const toast = document.getElementById('locationToast');
+            const toastText = document.getElementById('toastText');
+            
+            label.innerText = "SEARCHING...";
+
+            if (!navigator.geolocation) {
+                label.innerText = "BATANGAS";
+                return;
+            }
+
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 8000,
+                maximumAge: 0
+            };
+
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const { latitude, longitude } = pos.coords;
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`);
+                    const data = await res.json();
+                    
+                    const city = (data.address.city || 
+                                  data.address.town || 
+                                  data.address.municipality || 
+                                  data.address.suburb ||
+                                  data.address.province ||
+                                  "Batangas").toUpperCase();
+                    
+                    currentUserLocation = city;
+                    label.innerText = city;
+                    
+                    toastText.innerText = `Switched to ${city}`;
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 3000);
+
+                    sortAndRenderProducts();
+                } catch (error) {
+                    console.error("Geocoding failed", error);
+                    label.innerText = "BATANGAS";
+                }
+            }, (err) => {
+                console.warn("Geolocation blocked or timed out", err.message);
+                label.innerText = "BATANGAS";
+            }, options);
+        }
+
+        function sortAndRenderProducts(filterCat = 'All') {
+            let filtered = filterCat === 'All' ? [...products] : products.filter(p => p.category === filterCat);
+            
+            if (currentUserLocation) {
+                filtered.sort((a, b) => {
+                    const aMatch = a.location.toUpperCase().includes(currentUserLocation) ? 1 : 0;
+                    const bMatch = b.location.toUpperCase().includes(currentUserLocation) ? 1 : 0;
+                    return bMatch - aMatch;
+                });
+            }
+
+            renderProducts(filtered);
+        }
+
+        function renderProducts(items) {
+            const grid = document.getElementById('marketGrid');
+            grid.innerHTML = items.map((p, index) => {
+                const isLocal = currentUserLocation && p.location.toUpperCase().includes(currentUserLocation);
+                
+                return `
+                <div class="market-card" style="transition-delay: ${index * 80}ms">
+                    <div class="relative shimmer overflow-hidden rounded-lg">
+                        <img src="${p.img}" class="product-img" alt="${p.name}" onload="this.parentElement.classList.remove('shimmer')">
+                        ${isLocal ? '<div class="absolute top-2 left-2 bg-green-500 text-white text-[8px] font-black px-2 py-1 rounded-full shadow-lg">LOCAL</div>' : ''}
+                        <div class="price-tag">${p.price}</div>
+                    </div>
+                    <div class="flex items-start gap-2 mt-2">
+                        <div class="market-avatar">
+                            <i data-lucide="user" class="w-3 h-3 text-black"></i>
+                        </div>
+                        <div class="flex-grow overflow-hidden">
+                            <h4 class="market-name truncate">${p.farm}</h4>
+                            <p class="market-location">${p.location}</p>
+                        </div>
+                        <i data-lucide="message-circle" class="w-4 h-4 text-[#9cd695]"></i>
+                    </div>
+                </div>
+            `}).join('');
+            lucide.createIcons();
+            setTimeout(() => document.querySelectorAll('.market-card').forEach(c => c.classList.add('loaded')), 50);
+        }
+
+        function toggleFilter() {
+            const options = document.getElementById('filterOptions');
+            options.classList.toggle('show');
+        }
+
+        function applyFilter(cat, e) {
+            e.stopPropagation();
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.toggle('active', c.innerText.includes(cat) || (cat === 'All' && c.innerText === 'All')));
+            document.getElementById('activeFilterLabel').innerText = cat === 'All' ? 'Filter' : cat;
+            
+            document.querySelectorAll('.market-card').forEach(c => c.classList.remove('loaded'));
+            setTimeout(() => {
+                sortAndRenderProducts(cat);
+                toggleFilter();
+            }, 300);
+        }
+
+        function toggleNotifications() {
+            const side = document.getElementById('notificationSidebar');
+            const over = document.getElementById('overlay');
+            side.classList.toggle('open');
+            over.classList.toggle('active');
+        }
+
+        window.onload = () => {
+            renderProducts(products);
+            detectLocation(); // Initial trigger
+        };
+    </script>
+</body>
+</html>

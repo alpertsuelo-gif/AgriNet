@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNet Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap');
+
+        body {
+            background-color: #18352A;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            font-family: ui-sans-serif, system-ui, sans-serif;
+            padding: 1.5rem; 
+            margin: 0;
+        }    
+
+    
+        .brand-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-end; 
+            text-align: right;
+        }
+
+        .main-title {
+            font-family: 'Quicksand', sans-serif;
+            color: #ffffff; 
+            font-size: clamp(3rem, 10vw, 4.5rem);
+            font-weight: 700;
+            line-height: 0.85; 
+            letter-spacing: -3px; 
+            margin: 0;
+        }
+
+        .subtitle {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #ffffff; 
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-top: 5px;
+            padding-right: 4px; 
+    </style>
+</head>
+<body class="">
+    
+    <div class="flex-1"></div>
+
+    <div class="flex flex-col items-center justify-center flex-[1.2]">
+        
+
+        <img src="D:\Intro_Comp_Project\HTML\Agrinet_Logo.png" alt="AgriNet Logo" 
+             alt="AgriNet Logo" 
+             class="w-14 h-14 mb-4 object-contain" />
+        
+        <div class="brand-wrapper">
+            <h1 class="main-title">AgriNet</h1>
+            <span class="subtitle">by AniTech</span>
+        </div>
+    </div>
+
+     <a href="sign_in.html" class="w-full">
+    <div class="w-full max-w-[280px] flex flex-col gap-4 flex-1 justify-end pb-10">
+        <button class="w-full bg-[#a3db95] text-[#18352A] font-semibold text-sm py-4 rounded-[2rem] hover:bg-[#8ec281] transition-colors">
+            Sign In
+        </button>
+    </a>    
+
+    <a href="sign_up.html" class="w-full">
+        <button class="w-full bg-[#a3db95] text-[#18352A] font-semibold text-sm py-4 rounded-[2rem] hover:bg-[#8ec281] transition-colors">
+            Sign Up
+        </button>
+    </a>
+        
+        <button class="mt-6 text-[#F1E8D2] text-xs font-medium hover:underline focus:outline-none transition-all">
+            Sign in as Guest
+        </button>
+    </div>
+
+    <script>
+    import { auth } from './firebase-config.js';
+    import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    document.querySelector('button.text-xs').addEventListener('click', async () => {
+        try {
+            await signInAnonymously(auth);
+            window.location.href = 'dashboard.html';
+        } catch (error) {
+            console.error("Guest access failed", error);
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNet Startup Screen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        :root {
+            --bg-main: #F2F2F7; 
+            --card-bg: #FFFFFF;
+            --text-primary: #1D1D1F; 
+            --text-secondary: #86868B;
+            --accent: #1a3c34; 
+            --accent-light: #a7dd92;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            overscroll-behavior-y: none; 
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        #startup-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh; 
+            background-color: var(--accent); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+    
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), visibility 1s;
+        }
+
+        #startup-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .startup-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: subtleScaleIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .brand-image {
+            width: 160px; 
+            max-width: 85vw;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 40px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+        }
+
+        .spinner-container {
+            width: 28px;
+            height: 28px;
+            opacity: 0;
+            animation: fadeInSpinner 1s ease 1.2s forwards; 
+        }
+
+        .spinner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, rgba(167, 221, 146, 0) 0%, var(--accent-light) 100%);
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #fff 0);
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #fff 0);
+            animation: spin 1s linear infinite;
+        }
+
+        /* Animations */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes subtleScaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeInSpinner {
+            to { opacity: 1; }
+        }
+
+ 
+        
+        header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: var(--text-primary);
+        }
+
+        .content-area {
+            padding: 20px;
+        }
+
+   
+
+        .brand-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-end; 
+            text-align: right;
+        }
+
+        .main-title {
+            font-family: 'Quicksand', sans-serif;
+            color: #ffffff; 
+            font-size: clamp(3rem, 10vw, 6rem); 
+            font-weight: 700;
+            line-height: 0.85; 
+            letter-spacing: -3px;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #ffffff;
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-top: 5px;
+            padding-right: 4px; 
+        }
+    </style>
+
+</head>
+<body class="loading">
+
+    <div id="startup-screen">
+        <div class="startup-content">
+            <img src="D:\Intro_Comp_Project\HTML\Agrinet_Logo.png" alt="AgriNet Logo" class="brand-image" />
+            <div class="brand-wrapper">
+                <h1 class="main-title">AgriNet</h1>
+                <span class="subtitle">by AniTech</span>
+            </div>
+            <div class="spinner-container">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function hideStartupScreen() {
+            const startupScreen = document.getElementById('startup-screen');
+            
+            setTimeout(() => {
+                startupScreen.classList.add('hidden');
+                
+                setTimeout(() => {
+                    document.body.classList.remove('loading');
+                }, 800); 
+            }, 2500); 
+        }
+
+        if (document.readyState === 'complete') {
+            hideStartupScreen();
+        } else {
+            window.addEventListener('load', hideStartupScreen);
+        }
+    </script>
+</body>
+</html>

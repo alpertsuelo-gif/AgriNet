@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNet - Create Buyer Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap');
+
+        :root {
+            --bg-dark: #18352A;
+            --input-green: #9cd695;
+            --btn-vibrant: #a3db95;
+            --accent-green: #40c02b;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            margin: 0;
+            padding: 0;
+            color: white;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        @keyframes flyInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fly-in {
+            opacity: 0;
+            animation: flyInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+
+        .main-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-top: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .input-field {
+            width: 100%;
+            background-color: var(--input-green);
+            border: none;
+            border-radius: 6px;
+            padding: 12px 14px;
+            color: #18352A;
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            filter: brightness(1.05);
+            transform: scale(1.01);
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.02em;
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .terms-check {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-green);
+            flex-shrink: 0;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        input[type="checkbox"]:checked + .terms-check {
+            background-color: var(--accent-green);
+        }
+
+        input[type="checkbox"]:checked + .terms-check::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .continue-btn {
+            background-color: var(--btn-vibrant);
+            color: #18352A;
+            font-weight: 700;
+            padding: 16px;
+            width: 100%;
+            border-radius: 30px;
+            margin-top: 24px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .continue-btn:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-6">
+
+    <div class="mt-8 mb-10 flex flex-col items-center animate-fly-in text-center">
+        <p class="font-bold text-lg mb-4">Welcome to</p>
+        <img src="D:\Intro_Comp_Project\HTML\Agrinet_Logo.png" alt="AgriNet Logo" class="w-14 h-14 mb-2 object-contain" onerror="this.style.display='none';">
+        <h1 class="main-title">AgriNet</h1>
+        <p class="subtitle">Connecting Farmers, Markets, and Transport</p>
+    </div>
+
+    <div class="signup-container animate-fly-in delay-1">
+        <h3 class="text-lg font-bold mb-6 tracking-tight uppercase">Create Buyer / Market Account</h3>
+        
+        <form id="signupForm">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div>
+                    <label>Last Name</label>
+                    <input type="text" class="input-field" required>
+                </div>
+                <div>
+                    <label>First Name</label>
+                    <input type="text" class="input-field" required>
+                </div>
+                <div>
+                    <label>Middle Name</label>
+                    <input type="text" class="input-field">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div>
+                    <label>Email</label>
+                    <input type="email" class="input-field" required>
+                </div>
+                <div>
+                    <label>Phone Number</label>
+                    <input type="tel" class="input-field" required>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label>Password</label>
+                <input type="password" class="input-field" required>
+            </div>
+
+            <div class="mb-4">
+                <label>Location (Barangay/City)</label>
+                <input type="text" class="input-field" required>
+            </div>
+
+            <div class="mb-6">
+                <label>Type of Buyer (Public Market, Retailer, Restaurant)</label>
+                <input type="text" class="input-field" required>
+            </div>
+
+            <label class="flex gap-3 items-start normal-case cursor-pointer mb-2">
+                <input type="checkbox" class="hidden" checked required>
+                <div class="terms-check mt-1"></div>
+                <span class="text-[10px] leading-tight opacity-90 font-medium">
+                    By signing up as a Market, you agree to provide accurate information and use AgriNet for buying and coordinating with farmers.
+                </span>
+            </label>
+
+            <button type="submit" class="continue-btn">
+                Sign Up
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>

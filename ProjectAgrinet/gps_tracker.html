@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNet - Tracking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;500;700&display=swap');
+        
+        :root {
+            --dark-green: #18352A;
+            --light-green: #9cd695;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--light-green);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Animations --- */
+        @keyframes flyInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fly-in {
+            opacity: 0;
+            animation: flyInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+
+        /* Custom Map Area */
+        .map-area {
+            height: 52vh;
+            background-color: #e5e7eb;
+            position: relative;
+            border-top: 1px solid rgba(24, 53, 42, 0.1);
+            border-bottom: 1px solid rgba(24, 53, 42, 0.1);
+        }
+
+        .map-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://www.google.com/maps/vt/pb=!1m4!1m3!1i15!2i26154!3i14881!2m3!1e0!2sm!3i633140914!3m17!2sen!3sUS!5e18!12m4!1e68!2m2!1sset!2sRoadmap!12m3!1e37!2m1!1ssmartmaps!12m3!1e12!2m1!1s1!4e0!5m1!5f2!23i1301875');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.8;
+        }
+
+        .map-card {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            background: white;
+            padding: 12px 14px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .profile-pill {
+            background-color: var(--dark-green);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .details-text p {
+            margin-bottom: 2px;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Updated Header Layout with exact Icon Designs -->
+    <header class="bg-[#9cd695] px-4 pt-3 pb-2 sticky top-0 z-50">
+        <!-- Row 1: Logo & Hamburger -->
+        <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center gap-1">
+                <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20C50 20 20 40 20 70C20 85 35 90 50 90C65 90 80 85 80 70C80 40 50 20 50 20Z" fill="#18352A"/>
+                </svg>
+                <span class="font-extrabold text-xl text-[#18352A] tracking-tighter">AgriNet</span>
+            </div>
+            <button class="text-[#18352A]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </div>
+        
+        <!-- Row 2: Navigation (Updated to exact designs from image_1c212f.png) -->
+        <div class="flex justify-between items-end">
+            <div class="flex items-center gap-5">
+                <!-- Home Icon (Outline Pentagonal House) -->
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 10L12 3L21 10V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V10Z" stroke="#18352A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- Shopping Cart Icon (with wheels as dots) -->
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1H5L7.68 14.39C7.7714 14.8504 8.0219 15.264 8.3875 15.5583C8.7532 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="#18352A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="9" cy="21" r="2" fill="#18352A"/>
+                    <circle cx="20" cy="21" r="2" fill="#18352A"/>
+                </svg>
+            </div>
+            
+            <button onclick="window.location.href='index.html'" class="flex items-center gap-1 text-[#18352A] font-bold text-xl hover:opacity-80 transition-opacity">
+                Exit
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Animated Map Area -->
+    <div class="map-area animate-fly-in">
+        <div class="map-bg"></div>
+        
+        <!-- White Map Info Card -->
+        <div class="map-card">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="font-bold text-gray-800 text-[15px] mb-1">Kumintang Ilaya</h3>
+                    <p class="text-[11px] text-gray-500 leading-tight">Kumintang Ilaya, Batangas City,<br>Batangas, Philippines</p>
+                    <p class="text-[11px] text-blue-500 mt-2">No reviews</p>
+                </div>
+                <div class="flex gap-2">
+                    <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Logo Placeholder -->
+        <div class="absolute bottom-2 right-2 opacity-80">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" width="50" alt="Google">
+        </div>
+        
+        <!-- Mini Map Thumbnail -->
+        <div class="absolute bottom-4 left-4 w-12 h-12 border-2 border-white shadow-md bg-gray-400 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=100&h=100" class="w-full h-full object-cover" alt="Satellite view">
+        </div>
+    </div>
+
+    <!-- Details Section -->
+    <div class="bg-[#9cd695] px-4 pt-3 pb-8 flex-grow animate-fly-in delay-1">
+        <div class="flex items-center justify-between mb-4">
+            <!-- Profile Pill -->
+            <div class="profile-pill">
+                <div class="relative flex-shrink-0">
+                    <div class="w-10 h-10 rounded-full border-2 border-[#18352A] bg-[#9cd695] flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#18352A" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="absolute -bottom-1 -right-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#9cd695" stroke="#18352A" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="9 12 11 14 15 10"></polyline></svg>
+                    </div>
+                </div>
+                <div class="text-white overflow-hidden">
+                    <p class="font-bold text-[13px] leading-tight">Venice Marilao</p>
+                    <p class="text-[9px] font-medium leading-tight truncate">Kumintang Ilaya, Batangas City</p>
+                </div>
+            </div>
+
+            <!-- Side Icons -->
+            <div class="flex items-center gap-1.5 pl-3">
+                <!-- Chat Bubble -->
+                <div class="relative">
+                    <svg fill="#18352A" xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center gap-0.5 pointer-events-none pb-2">
+                        <div class="w-3 h-[1.5px] bg-[#9cd695]"></div>
+                        <div class="w-3 h-[1.5px] bg-[#9cd695]"></div>
+                    </div>
+                </div>
+                
+                <!-- Phone Icon -->
+                <div class="w-8 h-8 rounded-full bg-[#18352A] flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9cd695" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-[11px] leading-snug tracking-tight details-text animate-fly-in delay-2">
+            <p><span class="font-bold">Type of Crop:</span> Kamatis</p>
+            <p><span class="font-bold">Order/Quantity:</span> 24 kg of Kamatis</p>
+            <p><span class="font-bold">Ordered Made:</span> February 25, 2026 | 8:00 P.M</p>
+            <p><span class="font-bold">Place:</span> Kumintang Ilaya, Batangas City to Balagtas, Batangas City</p>
+            <p><span class="font-bold">Delivery:</span> February 28, 2026</p>
+            <p><span class="font-bold">Status:</span> Not Paid</p>
+            <p><span class="font-bold">Mode of Payment:</span> Cash</p>
+        </div>
+    </div>
+
+</body>
+</html>
